@@ -1,0 +1,58 @@
+specification {
+  element callingapp
+  element tsisystem
+  element tsicomponent
+}
+
+model {
+
+      tsisystem taskstream 'Taskstream Interface' {
+        description 'Taskstream Interface overview'
+      
+       
+        tsicomponent tsilib 'TSI Android library'{
+            description 'TSI library functions on the device'
+            style {
+                icon tech:java
+            }
+        }
+
+        tsicomponent tsidb 'TSI Postgres DB' {
+          description 'TSI cache storage for 4 hours'
+          style {
+            shape cylinder
+            icon https://icons.terrastruct.com/dev%2Fpostgresql.svg
+            }
+        }
+
+        tsicomponent tsiservice 'TSI service API' {
+          description 'TSI Service to access DB and Solace'
+          style {
+             icon tech:spring
+            }
+        }
+
+        tsicomponent tsisolace 'TSI Event Platform' {
+          description 'TSI Event Platform powered by Solace'
+          style {
+            shape queue
+            }
+        }
+
+        tsilib -> tsiservice 'Reads / Write to TSI event stream'
+        tsiservice -> tsisolace 'posts messages to queue'
+        tsisolace -> tsiservice 'acknowldge post'
+        tsiservice -> tsidb 'writes success message to DB'
+  
+}
+}
+
+views {
+  view TSI-Overall {
+    description 'TaskStream Interface'
+    include taskstream, taskstream.*
+    style taskstream {
+      color muted
+    }
+  }
+}

@@ -1,0 +1,67 @@
+specification {
+  element actor
+  element system
+  element component
+
+  tag ui {
+    color #33B074
+  }
+  tag version1 {
+    color #f00202ff
+  }
+  tag warn
+}
+
+model {
+    associate= actor "Associate" {
+        description 'Store User of the system'
+        style {
+            shape person
+            color green
+        }
+    }
+
+    capability= system 'Directed Shrink App' {
+        description 'Application to manage expiring products in store'
+    }
+
+    RMS =system 'Supply Chain System'
+    { description 'Generates product code date'}
+
+
+    extend capability {
+        component ui 'PDM Frontend' {
+        description 'Android based application'
+        style{
+            icon tech:kotlin
+            shape mobile 
+        }
+        ui -> taskstream 'Interfaces via TSI components'
+    }
+
+
+   
+    }
+
+    associate -> capability 'Access via TC52 Mobile device'
+    capability -> RMS 'Gets Product code date'
+  
+    }
+
+      views {
+        view index {title 'Landscape View'
+        include * 
+        style RMS {
+            color muted 
+        }}
+        view DirectedShrink {
+            title 'Directed Shrink Capability'
+            include capability, capability.*, taskstream
+            style  capability {
+                color muted
+            }
+            style taskstream {
+              color green
+            }
+        }
+      }
